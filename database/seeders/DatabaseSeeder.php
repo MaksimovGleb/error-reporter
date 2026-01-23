@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Error;
+use App\Models\ErrorMessage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        Error::factory(20)->create([
+        ErrorMessage::factory(20)->create([
             'user_id' => $user->id,
         ]);
 
-        User::factory(5)->hasErrors(3)->create();
+        User::factory(5)->hasErrorMessages(3)->create();
     }
 }

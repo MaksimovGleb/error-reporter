@@ -9,7 +9,7 @@
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form action="{{ route('errors.store') }}" method="POST">
+                    <form action="{{ route('error_messages.store') }}" method="POST">
                         @csrf
 
                         <div class="mb-4">
@@ -45,7 +45,7 @@
                         </div>
 
                         <div class="flex items-center justify-end space-x-4">
-                            <a href="{{ route('errors.index') }}" class="text-gray-600 hover:text-gray-900 transition duration-150">Cancel</a>
+                            <a href="{{ route('error_messages.index') }}" class="text-gray-600 hover:text-gray-900 transition duration-150">Cancel</a>
                             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition duration-150">
                                 Submit Report
                             </button>

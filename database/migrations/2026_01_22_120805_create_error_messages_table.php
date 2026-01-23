@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('errors', function (Blueprint $table) {
+        Schema::create('error_messages', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->text('description');
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('errors');
+        Schema::dropIfExists('error_messages');
     }
 };

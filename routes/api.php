@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ErrorController;
+use App\Http\Controllers\Api\ErrorMessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +12,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/errors', [ErrorController::class, 'index']);
-    Route::post('/errors', [ErrorController::class, 'store']);
+    Route::get('/error-messages', [ErrorMessageController::class, 'index']);
+    Route::post('/error-messages', [ErrorMessageController::class, 'store']);
 });

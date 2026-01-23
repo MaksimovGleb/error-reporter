@@ -31,8 +31,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function errors()
+    public function errorMessages()
     {
-        return $this->hasMany(Error::class);
+        return $this->hasMany(ErrorMessage::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\DTOs;
 
-readonly class ErrorData
+readonly class ErrorMessageData
 {
     public function __construct(
         public string $title,
