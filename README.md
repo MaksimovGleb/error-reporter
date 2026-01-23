@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Error Reporter System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Система для сбора и просмотра отчетов об ошибках (Error Messages), построенная на Laravel 11.
 
-## About Laravel
+## 1. Описание проекта
+Приложение позволяет пользователям регистрировать сообщения об ошибках через Web-интерфейс или API. Каждое сообщение содержит заголовок, описание и уровень критичности. Данные доступны только авторизованному автору сообщения.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 2. Скриншоты пользовательского интерфейса
+*(Скриншоты доступны в папке `docs/screenshots`)*
+- **Список сообщений**: Таблица с фильтрацией по автору и пагинацией.
+- **Создание сообщения**: Форма с валидацией полей.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 3. Инструкция по сборке и запуску
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Требования
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- SQLite (или другая БД)
 
-## Learning Laravel
+### Установка
+1. **Клонирование**:
+   ```bash
+   git clone <repository-url>
+   cd error-reporter
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Зависимости**:
+   ```bash
+   composer install
+   npm install
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3. **Окружение**:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **База данных**:
+   По умолчанию используется SQLite. Убедитесь, что файл `database/database.sqlite` существует (или выполните `touch database/database.sqlite`).
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-## Laravel Sponsors
+5. **Сборка фронтенда**:
+   ```bash
+   npm run build
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+6. **Запуск**:
+   ```bash
+   php artisan serve
+   ```
+   Приложение будет доступно по адресу `http://localhost:8000`.
 
-### Premium Partners
+## 4. Архитектурные решения
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+В проекте реализован современный подход к разработке на Laravel с разделением ответственности:
 
-## Contributing
+- **Data Transfer Objects (DTO)**: Используется `ErrorMessageData` для строгой типизации данных между контроллерами и бизнес-логикой. Это исключает передачу сырых массивов.
+- **Actions**: Бизнес-логика вынесена в отдельные классы (`CreateErrorMessageAction`, `GetErrorMessagesAction`). Это позволяет повторно использовать код в Web и API контроллерах.
+- **Service Layer**: `ErrorMessageService` выступает в роли фасада для доступа к экшенам, упрощая внедрение зависимостей в контроллеры.
+- **API Resources**: `ErrorMessageResource` используется для трансформации моделей в JSON, обеспечивая стабильную структуру API и скрывая детали реализации БД.
+- **Security**: 
+    - Web-интерфейс защищен через Laravel Breeze (Session auth).
+    - API защищено через Laravel Sanctum (Token auth).
+    - Доступ к данным ограничен на уровне Query Builder (пользователь видит только свои записи).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 5. API и Postman
+Для тестирования API в корне проекта находится файл:
+`error-reporter.postman_collection.json`
 
-## Code of Conduct
+**Основные эндпоинты:**
+- `POST /api/login` — Аутентификация.
+- `GET /api/error-messages` — Список сообщений.
+- `POST /api/error-messages` — Создание сообщения.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 6. Тестирование
+Для запуска автоматизированных тестов (Feature & Unit):
+```bash
+php artisan test
+```
+Тесты покрывают: регистрацию, логин (Web/API), CRUD операций и права доступа.
