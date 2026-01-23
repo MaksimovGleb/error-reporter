@@ -24,10 +24,7 @@ class ErrorController extends Controller
 
     public function store(ErrorRequest $request)
     {
-        $this->errorService->createError(
-            $request->validated(),
-            auth()->id()
-        );
+        $this->errorService->createError($request->toDto());
 
         return redirect()->route('errors.index')->with('success', 'Error report created successfully.');
     }

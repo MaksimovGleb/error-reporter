@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\ErrorData;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ErrorRequest extends FormRequest
@@ -18,5 +19,12 @@ class ErrorRequest extends FormRequest
             'description' => ['required', 'string'],
             'level' => ['required', 'string', 'in:info,warning,error,critical'],
         ];
+    }
+
+    public function toDto(): ErrorData
+    {
+        return ErrorData::fromArray(array_merge($this->validated(), [
+            'user_id' => auth()->id(),
+        ]));
     }
 }

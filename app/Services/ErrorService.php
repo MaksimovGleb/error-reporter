@@ -2,22 +2,26 @@
 
 namespace App\Services;
 
+use App\Actions\CreateErrorAction;
+use App\Actions\GetErrorsAction;
+use App\DTOs\ErrorData;
 use App\Models\Error;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ErrorService
 {
+    public function __construct(
+        protected GetErrorsAction $getErrorsAction,
+        protected CreateErrorAction $createErrorAction,
+    ) {}
+
     public function getAllErrors(int $perPage = 10): LengthAwarePaginator
     {
-        return Error::with('user')
-            ->latest()
-            ->paginate($perPage);
+        return $this->getErrorsAction->execute($perPage);
     }
 
-    public function createError(array $data, int $userId): Error
+    public function createError(ErrorData $data): Error
     {
-        return Error::create(array_merge($data, [
-            'user_id' => $userId,
-        ]));
+        return $this->createErrorAction->execute($data);
     }
 }
